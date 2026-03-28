@@ -37,7 +37,8 @@ Ce projet consiste en une application backend complète développée avec **Spri
   - git clone https://github.com/fayelise/medal_tracker.git
 
 3. **Creer la base de donnees MySQL avec la commande suivante**
-   - Create DATABASE medal;(garder le meme nom pour eviter des erreurs ou sinon changer aussi le nom dans **application.properties**)
+   - Create DATABASE medal; 
+   (garder le meme nom pour eviter des erreurs ou sinon changer aussi le nom dans **application.properties**)
 
 4.  **Configuration Base de Données** :
     Modifiez le fichier `src/main/resources/application.properties` avec vos identifiants :

@@ -57,10 +57,13 @@ class MedailleServiceTest {
         athlete = new Athlete();
         athlete.setId(1L);
         athlete.setPays(pays);
+        athlete.setDiscipline("Athletisme");
 
         competition = new Competition();
         competition.setId(1L);
+        competition.setDiscipline("Athletisme");
         competition.setStatut(StatutCompetition.TERMINEE);
+        competition.setDateFin(LocalDate.now().minusDays(1));
     }
 
     @Test

@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,12 +66,16 @@ class MedailleControllerIntegrationTest {
 
         Athlete a = new Athlete();
         a.setNom("Usain Bolt");
+        a.setDiscipline("Athletisme");
         a.setPays(p);
         athlete = athleteRepository.save(a);
 
         Competition c = new Competition();
         c.setNom("100m");
+        c.setDiscipline("Athletisme");
         c.setStatut(StatutCompetition.TERMINEE);
+        c.setDateDebut(LocalDate.of(2024, 6, 1));
+        c.setDateFin(LocalDate.of(2024, 6, 30));
         competition = competitionRepository.save(c);
     }
 

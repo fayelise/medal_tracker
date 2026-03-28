@@ -42,7 +42,7 @@ public class MedailleController {
     }
 
     // Attribution de médaille
-    @PostMapping
+    @PostMapping("/attribuer")
     public ResponseEntity<MedailleResponseDTO> attribuerMedaille(@Valid @RequestBody MedailleRequestDTO request) {
         Medaille medaille = medailleService.attribuerMedaille(
                 request.getAthleteId(),
