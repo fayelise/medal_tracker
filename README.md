@@ -36,17 +36,17 @@ Ce projet consiste en une application backend complète développée avec **Spri
 2. **Cloner le projet**
   - git clone https://github.com/fayelise/medal_tracker.git
 
-2. **Creer la base de donnees MySQL avec la commande suivante**
+3. **Creer la base de donnees MySQL avec la commande suivante**
    - Create DATABASE medal;(garder le meme nom pour eviter des erreurs ou sinon changer aussi le nom dans **application.properties**)
 
-3.  **Configuration Base de Données** :
+4.  **Configuration Base de Données** :
     Modifiez le fichier `src/main/resources/application.properties` avec vos identifiants :
     ```properties
     spring.datasource.url=jdbc:mysql://localhost:3306/medal
     spring.datasource.username=VOTRE_USERNAME
     spring.datasource.password=VOTRE_PASSWORD
     ```
-4.  **Lancement de l'application** :
+5.  **Lancement de l'application** :
     ```bash
     ./mvnw spring-boot:run
     ```
