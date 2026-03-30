@@ -14,6 +14,9 @@ import com.medaltracker.olympic.repository.CompetitionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Service gérant la logique métier pour les compétitions.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -21,15 +24,30 @@ public class CompetitionService {
 
     private final CompetitionRepository competitionRepository;
 
+    /**
+     * Récupère la liste de toutes les compétitions.
+     * @return Liste de compétitions
+     */
     public List<Competition> getAll() {
         return competitionRepository.findAll();
     }
 
+    /**
+     * Récupère une page de compétitions.
+     * @param pageable Informations de pagination
+     * @return Page de compétitions
+     */
     public Page<Competition> getAll(Pageable pageable) {
         log.debug("Récupération de toutes les compétitions (page {})", pageable.getPageNumber());
         return competitionRepository.findAll(pageable);
     }
 
+    /**
+     * Récupère une compétition par son identifiant.
+     * @param id Identifiant de la compétition
+     * @return La compétition trouvée
+     * @throws ResourceNotFoundException si la compétition n'existe pas
+     */
     public Competition getById(Long id) {
         return competitionRepository.findById(id)
                 .orElseThrow(() -> {
@@ -38,6 +56,12 @@ public class CompetitionService {
                 });
     }
 
+    /**
+     * Crée une nouvelle compétition avec validation des dates.
+     * @param dto Données de la compétition
+     * @return La compétition créée
+     * @throws RuntimeException si la date de fin est avant la date de début
+     */
     public Competition create(CompetitionDTO dto) {
         log.info("Création d'une nouvelle compétition: {}", dto.getNom());
         
@@ -59,6 +83,14 @@ public class CompetitionService {
         return saved;
     }
 
+    /**
+     * Met à jour les informations d'une compétition avec validation des dates.
+     * @param id Identifiant de la compétition
+     * @param dto Nouvelles données
+     * @return La compétition mise à jour
+     * @throws ResourceNotFoundException si la compétition n'existe pas
+     * @throws RuntimeException si la cohérence des dates n'est pas respectée
+     */
     public Competition update(Long id, CompetitionDTO dto) {
         log.info("Mise à jour de la compétition ID {}", id);
         Competition comp = getById(id);
@@ -83,6 +115,11 @@ public class CompetitionService {
         return updated;
     }
 
+    /**
+     * Supprime une compétition.
+     * @param id Identifiant de la compétition
+     * @throws ResourceNotFoundException si la compétition n'existe pas
+     */
     public void delete(Long id) {
         log.info("Suppression de la compétition ID {}", id);
         Competition comp = getById(id);

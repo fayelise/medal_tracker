@@ -19,6 +19,9 @@ import com.medaltracker.olympic.repository.MedailleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Service gérant l'attribution et la consultation des médailles.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -28,15 +31,37 @@ public class MedailleService {
     private final AthleteRepository athleteRepository;
     private final CompetitionRepository competitionRepository;
 
+    /**
+     * Récupère la liste de toutes les médailles attribuées.
+     * @return Liste de médailles
+     */
     public List<Medaille> getAll() {
         return medailleRepository.findAll();
     }
 
+    /**
+     * Récupère une médaille par son identifiant.
+     * @param id Identifiant de la médaille
+     * @return La médaille trouvée
+     * @throws ResourceNotFoundException si la médaille n'existe pas
+     */
     public Medaille getById(Long id) {
         return medailleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Médaille introuvable"));
     }
 
+    /**
+     * Attribue une médaille à un athlète pour une compétition donnée.
+     * Vérifie la cohérence des disciplines et des dates.
+     * @param athleteId Identifiant de l'athlète
+     * @param competitionId Identifiant de la compétition
+     * @param type Type de médaille (OR, ARGENT, BRONZE)
+     * @param dateObtention Date d'obtention
+     * @return La médaille enregistrée
+     * @throws ResourceNotFoundException si l'athlète ou la compétition n'existe pas
+     * @throws RuntimeException si la compétition n'est pas terminée, si les disciplines ne correspondent pas, 
+     *                          ou si la date d'obtention est invalide
+     */
     public Medaille attribuerMedaille(Long athleteId, Long competitionId, TypeMedaille type, LocalDate dateObtention) {
 
         log.info("Attribution d'une médaille de type {} à l'athlète ID {} pour la compétition ID {}", type, athleteId, competitionId);
@@ -81,10 +106,20 @@ public class MedailleService {
         return saved;
     }
 
+    /**
+     * Récupère les médailles obtenues par un athlète.
+     * @param athleteId Identifiant de l'athlète
+     * @return Liste de médailles
+     */
     public List<Medaille> getByAthlete(Long athleteId) {
         return medailleRepository.findByAthleteId(athleteId);
     }
 
+    /**
+     * Récupère les médailles attribuées pour une compétition.
+     * @param competitionId Identifiant de la compétition
+     * @return Liste de médailles
+     */
     public List<Medaille> getByCompetition(Long competitionId) {
         return medailleRepository.findByCompetitionId(competitionId);
     }

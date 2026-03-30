@@ -13,6 +13,9 @@ import com.medaltracker.olympic.repository.MedailleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Service gérant le calcul des statistiques de médailles.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -20,14 +23,22 @@ public class StatistiqueService {
 
     private final MedailleRepository medailleRepository;
 
+    /**
+     * Calcule les statistiques globales (Or, Argent, Bronze, Total, Points) pour un pays.
+     * @param paysId Identifiant du pays
+     * @return Map contenant les statistiques calculées
+     */
     public Map<String, Integer> statsParPays(Long paysId) {
         log.debug("Calcul des statistiques pour le pays ID {}", paysId);
         List<Medaille> medailles = medailleRepository.findByPaysId(paysId);
         return calculerStats(medailles);
     }
 
-    
-
+    /**
+     * Méthode utilitaire pour calculer les compteurs à partir d'une liste de médailles.
+     * @param medailles Liste de médailles
+     * @return Map des statistiques
+     */
     private Map<String, Integer> calculerStats(List<Medaille> medailles) {
         int or = (int) medailles.stream().filter(m -> m.getType() == TypeMedaille.OR).count();
         int argent = (int) medailles.stream().filter(m -> m.getType() == TypeMedaille.ARGENT).count();

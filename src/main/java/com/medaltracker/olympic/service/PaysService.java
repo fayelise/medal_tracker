@@ -15,6 +15,9 @@ import com.medaltracker.olympic.repository.PaysRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Service gérant la logique métier pour les pays.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -22,15 +25,30 @@ public class PaysService {
 
     private final PaysRepository paysRepository;
 
+    /**
+     * Récupère la liste de tous les pays.
+     * @return Liste de pays
+     */
     public List<Pays> getAll() {
         return paysRepository.findAll();
     }
 
+    /**
+     * Récupère une page de pays.
+     * @param pageable Informations de pagination
+     * @return Page de pays
+     */
     public Page<Pays> getAll(Pageable pageable) {
         log.debug("Récupération de tous les pays (page {})", pageable.getPageNumber());
         return paysRepository.findAll(pageable);
     }
 
+    /**
+     * Récupère un pays par son identifiant.
+     * @param id Identifiant du pays
+     * @return Le pays trouvé
+     * @throws ResourceNotFoundException si le pays n'existe pas
+     */
     public Pays getById(Long id) {
         return paysRepository.findById(id)
                 .orElseThrow(() -> {
@@ -39,6 +57,11 @@ public class PaysService {
                 });
     }
 
+    /**
+     * Crée un nouveau pays.
+     * @param dto Données du pays
+     * @return Le pays créé
+     */
     public Pays create(PaysDTO dto) {
         log.info("Création d'un nouveau pays: {}", dto.getNom());
         Pays pays = new Pays();
@@ -50,6 +73,11 @@ public class PaysService {
         return saved;
     }
 
+    /**
+     * Crée plusieurs pays en une seule opération (batch).
+     * @param paysList Liste de DTOs de pays
+     * @return Liste des pays créés
+     */
     public List<Pays> createAll(List<PaysDTO> paysList) {
         log.info("Création groupée de {} pays", paysList.size());
         List<Pays> entities = paysList.stream().map(dto -> {
@@ -64,6 +92,13 @@ public class PaysService {
         return saved;
     }
 
+    /**
+     * Met à jour les informations d'un pays.
+     * @param id Identifiant du pays
+     * @param dto Nouvelles données
+     * @return Le pays mis à jour
+     * @throws ResourceNotFoundException si le pays n'existe pas
+     */
     public Pays update(Long id, PaysDTO dto) {
         log.info("Mise à jour du pays ID {}", id);
         Pays pays = getById(id);
@@ -77,6 +112,11 @@ public class PaysService {
         return updated;
     }
 
+    /**
+     * Supprime un pays.
+     * @param id Identifiant du pays
+     * @throws ResourceNotFoundException si le pays n'existe pas
+     */
     public void delete(Long id) {
       log.info("Suppression du pays ID {}", id);
       Pays pays = getById(id);
