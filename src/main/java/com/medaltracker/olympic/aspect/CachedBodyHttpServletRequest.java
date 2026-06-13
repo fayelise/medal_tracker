@@ -1,0 +1,74 @@
+package com.medaltracker.olympic.aspect;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
+
+/**
+ * Wrapper de requête HTTP qui met en cache le body pour permettre plusieurs lectures.
+ * Nécessaire pour logger le contenu de la requête avant le traitement par le contrôleur.
+ */
+public class CachedBodyHttpServletRequest extends HttpServletRequestWrapper {
+
+    private final byte[] cachedBody;
+
+    public CachedBodyHttpServletRequest(HttpServletRequest request) throws IOException {
+        super(request);
+        this.cachedBody = request.getInputStream().readAllBytes();
+    }
+
+    @Override
+    public ServletInputStream getInputStream() {
+        return new CachedBodyServletInputStream(this.cachedBody);
+    }
+
+    @Override
+    public BufferedReader getReader() {
+        return new BufferedReader(new InputStreamReader(getInputStream(), StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Retourne le body mis en cache sous forme de chaîne de caractères.
+     */
+    public String getCachedBody() {
+        return new String(this.cachedBody, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * ServletInputStream qui lit depuis le body mis en cache.
+     */
+    private static class CachedBodyServletInputStream extends ServletInputStream {
+        private final ByteArrayInputStream inputStream;
+
+        public CachedBodyServletInputStream(byte[] cachedBody) {
+            this.inputStream = new ByteArrayInputStream(cachedBody);
+        }
+
+        @Override
+        public boolean isFinished() {
+            return inputStream.available() == 0;
+        }
+
+        @Override
+        public boolean isReady() {
+            return true;
+        }
+
+        @Override
+        public void setReadListener(ReadListener readListener) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public int read() {
+            return inputStream.read();
+        }
+    }
+}
